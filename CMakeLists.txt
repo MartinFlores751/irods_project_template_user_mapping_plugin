@@ -42,7 +42,7 @@ if (IRODS_BUILD_WITH_WERROR)
   add_compile_options(-Werror)
 endif()
 
-set(RULE_ENGINE_PLUGIN_NAME irods_rule_engine_plugin-nop)
+set(RULE_ENGINE_PLUGIN_NAME irods_http_api_user_mapper_plugin-local_json_file)
 
 add_library(${RULE_ENGINE_PLUGIN_NAME} MODULE "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
@@ -72,7 +72,7 @@ target_link_libraries(
     "${IRODS_EXTERNALS_FULLPATH_FMT}/lib/libfmt.so"
     ${CMAKE_DL_LIBS})
 
-install(TARGETS ${RULE_ENGINE_PLUGIN_NAME} LIBRARY DESTINATION "${IRODS_PLUGINS_DIRECTORY}/rule_engines")
+install(TARGETS ${RULE_ENGINE_PLUGIN_NAME} LIBRARY DESTINATION "${IRODS_PLUGINS_DIRECTORY}/http_api")
 
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/test_project_template_cpp_rule_engine_plugin.py"
         DESTINATION "${IRODS_HOME_DIRECTORY}/scripts/irods/test"
@@ -82,7 +82,7 @@ install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/run_project_template_cpp_ru
         DESTINATION "${IRODS_HOME_DIRECTORY}/scripts"
         PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 
-set(PLUGIN_PACKAGE_NAME irods-rule-engine-plugin-nop)
+set(PLUGIN_PACKAGE_NAME irods-http-api-user-mapper-plugin-local-json-file)
 
 include(IrodsCPackCommon)
 
