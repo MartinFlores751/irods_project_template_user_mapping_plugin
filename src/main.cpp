@@ -8,14 +8,14 @@ LocalFileUserManager::LocalFileUserManager(const nlohmann::json& _config) {
 	const auto path{_config.find("file_path")};
 	if (path == std::end(_config)) {
 		// handle bad case
-		irods::http::log::error("[{}]: Unable to find 'file_path' in provided config.", __func__);
+		// irods::http::log::error("[{}]: Unable to find 'file_path' in provided config.", __func__);
 	}
 
 	// Save file string
 	file_path = *path;
 
 	// Parse into json object
-	irods::http::log::trace("[{}]: openning file_path [{}].", __func__, file_path);
+	// irods::http::log::trace("[{}]: openning file_path [{}].", __func__, file_path);
 	update();
 }
 
@@ -33,14 +33,14 @@ LocalFileUserManager::LocalFileUserManager(const nlohmann::json& _config) {
 				return {.irods_user_name = _itter.key(), .attributes = _itter.value()};
 			});
 		} catch(...) {
-			irods::http::log::debug("[{}]: There was an exception ...", __func__);
+			// irods::http::log::debug("[{}]: There was an exception ...", __func__);
 			return false;
 		}
 
 		// TODO: REMOVE ME!!!
-		std::for_each(std::cbegin(profile_list), std::cend(profile_list), [] (const auto& _profile) -> void {
-			irods::http::log::debug("[{}]: has user [{}]", __func__, _profile.irods_user_name);
-		});
+		// std::for_each(std::cbegin(profile_list), std::cend(profile_list), [] (const auto& _profile) -> void {
+		// 	irods::http::log::debug("[{}]: has user [{}]", __func__, _profile.irods_user_name);
+		// });
 		return true;
 	}
 
@@ -73,11 +73,11 @@ private:
 extern "C" {
 	UserMgr* user_manager_init(const char* _args) {
 		try {
-			irods::http::log::debug("[{}]: recieved _args [{}]", __func__, _args);
+			// irods::http::log::debug("[{}]: recieved _args [{}]", __func__, _args);
 			return reinterpret_cast<UserMgr*>(new LocalFileUserManager{nlohmann::json::parse(_args)});
 		} catch (...) {
 			auto e{std::current_exception()};
-			irods::http::log::debug("[{}]: There was an exception ...", __func__);
+			// irods::http::log::debug("[{}]: There was an exception ...", __func__);
 			std::rethrow_exception(e);
 			return nullptr;
 		}
@@ -90,18 +90,18 @@ extern "C" {
 
 			// Good nuff, just loggit
 			std::for_each(std::cbegin(res), std::cend(res), [] (const auto& _match) -> void {
-				irods::http::log::debug("[{}]: matched user [{}]", __func__, _match.irods_user_name);
+				// irods::http::log::debug("[{}]: matched user [{}]", __func__, _match.irods_user_name);
 			});
 
 		} catch (...) {
 			auto e{std::current_exception()};
-			irods::http::log::debug("[{}]: There was an exception ...", __func__);
+			// irods::http::log::debug("[{}]: There was an exception ...", __func__);
 			std::rethrow_exception(e);
 		}
 		return nullptr;
 	}
 	void user_manager_close(UserMgr* _manager) {
-		irods::http::log::debug("[{}]: recieved _manager [{}]. Cleaning up.", __func__, fmt::ptr(_manager));
+		// irods::http::log::debug("[{}]: recieved _manager [{}]. Cleaning up.", __func__, fmt::ptr(_manager));
 		delete reinterpret_cast<UserManager*>(_manager);
 		_manager = nullptr;
 	}
