@@ -67,10 +67,10 @@ auto LocalFileUserManager::match(const nlohmann::json& _params) -> std::vector<U
 }
 
 extern "C" {
-	UserMgr* user_manager_init(const char* _args) {
+	void* user_manager_init(const char* _args) {
 		try {
 			// irods::http::log::debug("[{}]: recieved _args [{}]", __func__, _args);
-			return reinterpret_cast<UserMgr*>(new LocalFileUserManager{nlohmann::json::parse(_args)});
+			return reinterpret_cast<void*>(new LocalFileUserManager{nlohmann::json::parse(_args)});
 		} catch (...) {
 			auto e{std::current_exception()};
 			// irods::http::log::debug("[{}]: There was an exception ...", __func__);
@@ -78,9 +78,9 @@ extern "C" {
 			return nullptr;
 		}
 	}
-	UserPrf* user_manager_match(UserMgr* _manager, const char* _param) {
+	char* user_manager_match(void* _manager, const char* _param) {
 		try {
-			auto res{reinterpret_cast<UserManager*>(_manager)->match(_param)};
+			auto res{reinterpret_cast<UserManager*>(_manager)->match(nlohmann::json::parse(_param))};
 			// TODO: Do conversion to Appropriate DS here.
 			// Also, figure out how mem management works here?
 
@@ -96,7 +96,7 @@ extern "C" {
 		}
 		return nullptr;
 	}
-	void user_manager_close(UserMgr* _manager) {
+	void user_manager_close(void* _manager) {
 		// irods::http::log::debug("[{}]: recieved _manager [{}]. Cleaning up.", __func__, fmt::ptr(_manager));
 		delete reinterpret_cast<UserManager*>(_manager);
 		_manager = nullptr;
