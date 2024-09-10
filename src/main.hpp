@@ -1,5 +1,6 @@
 #include "interface.h"
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -16,7 +17,7 @@ struct UserProfile {
 class UserManager {
 public:
 	virtual ~UserManager() = default;
-	virtual auto match(const nlohmann::json& _params) -> std::vector<UserProfile> = 0;
+	virtual auto match(const nlohmann::json& _params) -> std::optional<std::string> = 0;
 };
 
 // Local is only designed for one process/multi-thread.
@@ -27,7 +28,7 @@ class LocalFileUserManager final : public UserManager {
 public:
 	explicit LocalFileUserManager(const nlohmann::json& _config);
 	auto update() -> bool;
-	auto match(const nlohmann::json& _params) -> std::vector<UserProfile> override;
+	auto match(const nlohmann::json& _params) -> std::optional<std::string> override;
 private:
 	std::string file_path;
 	std::vector<UserProfile> profile_list; // We're going to want to lock this when it gets accessed (especially for update case)
